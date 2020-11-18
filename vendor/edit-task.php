@@ -6,6 +6,7 @@ require_once 'functions.php';
 
 $id = $_POST['id'];
 $error_fields = [];
+$deadline = $_POST['deadline'] ?? null;
 
 if(isset($_POST['task-name'])){
     $task = $_POST['task-name'];
@@ -27,7 +28,7 @@ if (empty($id)) {
 
 $response;
 if (empty($error_fields)) {
-    $sql = "UPDATE `tasks` SET " . $field . " = '$task' WHERE `id`='$id'";
+    $sql = "UPDATE `tasks` SET " . $field . " = '$task', `deadline` = '$deadline' WHERE `id`='$id'";
     $res = mysqli_query($connect, $sql);
     if ($res) {
         $response = [

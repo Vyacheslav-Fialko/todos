@@ -7,12 +7,12 @@ export function allProject() {
                     if (project.tasks) {
                         tasks = '<ul class="tasks">'
                         $.each(project.tasks, (index, task) => { 
-                            tasks +=`<li class="task">
+                            tasks += `<li class="task" data-id="${task.id}">
                             <span class="task__chek">
                                 <input type="checkbox" ${task.status == 1 ? 'checked' : ''} data-id="${task.id}" name="status" class="checkbox">
                             </span>
                             
-                            <p class="task__name" data-id="${task.id}">${task.name}</p>
+                            <p class="task__name" data-id="${task.id}" title="deadline: ${task.deadline}">${task.name}</p>
                             <a href="#" class="task__btn edit-task">
                                 <i class="fas fa-pencil-alt task__icon" data-id="${task.id}"></i>
                             </a>

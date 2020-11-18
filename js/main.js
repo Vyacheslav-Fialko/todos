@@ -219,9 +219,11 @@ $content.delegate('.delete-task', 'click', (e) => {
 $content.delegate('.edit-task', 'click', (e) => {
     e.preventDefault();
     let id = e.target.dataset.id;
-    console.log($("input[name='id']").val())
-    let content = $('p[data-id='+ id +']').text();
-    $content.append(editTaskModal(id, content));
+    let content = $('p[data-id=' + id + ']').text();
+    let deadline = $('p[data-id=' + id + ']').attr('title').split(' ');
+    let date = deadline[1] ? 'value=' + deadline[1] : '';
+
+    $content.append(editTaskModal(id, content, date));
 });
 
 $content.delegate('.checkbox', 'click', (e) => {
@@ -231,7 +233,6 @@ $content.delegate('.checkbox', 'click', (e) => {
         id,
         status
     }
-    console.log(fields)
     $.post('./vendor/edit-task.php', fields).done((data) => {
         data = JSON.parse(data)
         if (data.status) {
@@ -242,11 +243,17 @@ $content.delegate('.checkbox', 'click', (e) => {
 
 $content.delegate('#edit-task-btn', 'click', (e) => {
     e.preventDefault();
+    $('#deadline').addClass('input__error');
     let text = $("#editTasktModal").val();
+    let date = $("#deadline").val();
     let id = e.target.dataset.id;
+    let today = new Date();
+    today = today.getFullYear() + '-' + (+today.getMonth() + 1) + '-' + today.getDate();
+
     let fields = {
         id,
-        'task-name': text
+        'task-name': text,
+        'deadline': date
     }
     $.post('./vendor/edit-task.php', fields).done((data) => {
         data = JSON.parse(data)
