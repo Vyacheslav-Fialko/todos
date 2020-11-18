@@ -25,14 +25,16 @@ export function editProjectModal(id, content) {
 `;
 }
 
-export function editTaskModal(id, content, deadline) {
+export function editTaskModal(id, content, deadline, priority) {
     return `
     <div class="modal">
         <form class="form">
             <label for="editTasktModal" class="form__label">name task</label>
-            <input type="text" class="form__input" id="editTasktModal" placeholder="enter task name" name="task-name" value="${content}" required>
+            <input type="text" class="form__input" id="editTasktModal" placeholder="enter task name" name="name" value="${content}" required>
+            <label for="deadline" class="form__label">deadline</label>
             <input type="date" name="deadline" id="deadline" class="form__input" ${deadline} >
-            
+            <label for="priority" class="form__label">priority</label>
+            <input type="number" name="priority" value="${priority}" min="0" max="100" class="form__input" id="priority">
             <button class="form__btn" type="submit" id="edit-task-btn" data-id="${id}">edit task</button>
             <p class="form__info"><a href="#" class="form__link" id="close">close</a></p>
             <p class="form__msg hide"></p>

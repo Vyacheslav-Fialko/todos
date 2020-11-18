@@ -6,29 +6,20 @@ require_once 'functions.php';
 
 $id = $_POST['id'];
 $error_fields = [];
-$deadline = $_POST['deadline'] ?? null;
-
-if(isset($_POST['task-name'])){
-    $task = $_POST['task-name'];
-    $field = 'name';
-if (empty($task)) {
-    $error_fields[] = 'editTasktModal';
-}
-}
-
-if (isset($_POST['status'])) {
-    $task = $_POST['status'] == 'true' ? 1 : 0;
-    $field = 'status';
-}
 
 if (empty($id)) {
     $error_fields[] = 'editTaskModalw';
 }
 
+$update_field = [];
+foreach ($_POST as $key => $value) {
+    $update_field[] = "$key = '$value'";
+}
+$field = implode(', ', $update_field);
 
 $response;
 if (empty($error_fields)) {
-    $sql = "UPDATE `tasks` SET " . $field . " = '$task', `deadline` = '$deadline' WHERE `id`='$id'";
+    $sql = "UPDATE `tasks` SET $field WHERE `id`='$id'";
     $res = mysqli_query($connect, $sql);
     if ($res) {
         $response = [

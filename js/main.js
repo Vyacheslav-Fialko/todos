@@ -25,7 +25,6 @@ $content.delegate('#register', 'click', (e) => {
 
 });
 
-
 $content.delegate('#singin', 'click', (e) => {
     e.preventDefault();
     $content.html(singin);
@@ -219,19 +218,29 @@ $content.delegate('.delete-task', 'click', (e) => {
 $content.delegate('.edit-task', 'click', (e) => {
     e.preventDefault();
     let id = e.target.dataset.id;
-    let content = $('p[data-id=' + id + ']').text();
-    let deadline = $('p[data-id=' + id + ']').attr('title').split(' ');
+    let content = $(`p[data-id="${id}"]`).text();
+    let deadline = $(`li[data-id="${id}"]`).attr('title').split(' ');
     let date = deadline[1] ? 'value=' + deadline[1] : '';
+    let priority = $(`li[data-id="${id}"]`).attr('data-priority');
 
-    $content.append(editTaskModal(id, content, date));
+    $content.append(editTaskModal(id, content, date, priority));
 });
 
 $content.delegate('.checkbox', 'click', (e) => {
     let id = e.target.dataset.id;
-    let status = e.target.checked
+    let status = e.target.checked;
+    let priority = $(`li[data-id="${id}"]`).data('priority');
+    if(status){
+        priority = 0;
+        status = 1;
+    } else {
+        status = 0;
+    }
+    console.log(status, priority)
     let fields = {
         id,
-        status
+        status,
+        priority
     }
     $.post('./vendor/edit-task.php', fields).done((data) => {
         data = JSON.parse(data)
@@ -244,17 +253,20 @@ $content.delegate('.checkbox', 'click', (e) => {
 $content.delegate('#edit-task-btn', 'click', (e) => {
     e.preventDefault();
     $('#deadline').addClass('input__error');
-    let text = $("#editTasktModal").val();
+    let name = $("#editTasktModal").val();
     let date = $("#deadline").val();
+    let priority = $("#priority").val();
     let id = e.target.dataset.id;
     let today = new Date();
     today = today.getFullYear() + '-' + (+today.getMonth() + 1) + '-' + today.getDate();
 
     let fields = {
         id,
-        'task-name': text,
-        'deadline': date
+        name,
+        'deadline': date,
+        priority
     }
+    console.log(fields)
     $.post('./vendor/edit-task.php', fields).done((data) => {
         data = JSON.parse(data)
         if (data.status) {
@@ -278,3 +290,6 @@ $content.delegate('#close', 'click', (e) => {
 
 });
 
+function sortByCheck(arr) {
+    arr.sort((a, b) => a.status > b.staus? 1 : -1);
+}
